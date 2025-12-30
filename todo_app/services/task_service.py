@@ -4,35 +4,64 @@ Provides CRUD (Create, Read, Update, Delete) operations
 and status management for tasks in memory.
 """
 
+import json
+from dataclasses import asdict
+from pathlib import Path
 from typing import Optional
 from todo_app.models.task import Task
 from todo_app.lib.exceptions import TaskNotFound, InvalidTitle
 
 
 class TaskService:
-    """Manages in-memory task storage and CRUD operations."""
+    """Manages task storage and CRUD operations with file persistence."""
 
     MAX_TITLE_LENGTH: int = 1000
     MAX_DESCRIPTION_LENGTH: int = 1000
+    DEFAULT_STORAGE_FILE: str = "tasks.json"
 
-    def __init__(self) -> None:
-        """Initialize task service with empty task list and ID counter."""
-        self._tasks: list[Task] = []
-        self._next_id: int = 1
-
-    def add_task(self, title: str, description: str = "") -> Task:
-        """Add a new task to the task list.
+    def __init__(self, storage_path: Optional[str] = None) -> None:
+        """Initialize task service.
 
         Args:
-            title: Task title (required, non-empty, <=1000 chars)
-            description: Optional task description (<=1000 chars)
-
-        Returns:
-            New task object with assigned sequential ID
-
-        Raises:
-            InvalidTitle: If title is empty or exceeds length limit
+            storage_path: Path to JSON storage file. Defaults to 'tasks.json' in project root.
         """
+        if storage_path:
+            self.storage_path = Path(storage_path)
+        else:
+            # Default to root of the project
+            self.storage_path = Path(__file__).parent.parent.parent / self.DEFAULT_STORAGE_FILE
+
+        self._tasks: list[Task] = []
+        self._next_id: int = 1
+        self._load_tasks()
+
+    def _load_tasks(self) -> None:
+        """Load tasks from the JSON storage file."""
+        if not self.storage_path.exists():
+            return
+
+        try:
+            with open(self.storage_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                self._tasks = [Task(**task_data) for task_data in data]
+                if self._tasks:
+                    self._next_id = max(task.id for task in self._tasks) + 1
+        except (json.JSONDecodeError, IOError):
+            # If file is corrupt or unreadable, start with empty list
+            self._tasks = []
+            self._next_id = 1
+
+    def _save_tasks(self) -> None:
+        """Save tasks to the JSON storage file."""
+        try:
+            with open(self.storage_path, "w", encoding="utf-8") as f:
+                json.dump([asdict(task) for task in self._tasks], f, indent=4)
+        except IOError:
+            # In a production app, we'd handle this more gracefully
+            pass
+
+    def add_task(self, title: str, description: str = "") -> Task:
+        """Add a new task to the task list."""
         self._validate_title(title)
         self._validate_description(description)
 
@@ -44,48 +73,22 @@ class TaskService:
         )
         self._tasks.append(task)
         self._next_id += 1
+        self._save_tasks()
         return task
 
     def get_task(self, task_id: int) -> Task:
-        """Retrieve a task by ID.
-
-        Args:
-            task_id: Task ID to retrieve
-
-        Returns:
-            Task object matching provided ID
-
-        Raises:
-            TaskNotFound: If task_id does not exist in task list
-        """
+        """Retrieve a task by ID."""
         for task in self._tasks:
             if task.id == task_id:
                 return task
         raise TaskNotFound(f"Task with ID {task_id} not found")
 
     def list_tasks(self) -> list[Task]:
-        """Retrieve all tasks in the task list.
-
-        Returns:
-            All tasks in creation order (by ID)
-        """
+        """Retrieve all tasks in the task list."""
         return list(self._tasks)
 
     def update_task(self, task_id: int, title: str, description: Optional[str] = None) -> Task:
-        """Update an existing task's title and/or description.
-
-        Args:
-            task_id: Task ID to update
-            title: New task title (required, non-empty, <=1000 chars)
-            description: New task description (optional, <=1000 chars). If None, keeps existing
-
-        Returns:
-            Updated task object with new title/description
-
-        Raises:
-            TaskNotFound: If task_id does not exist
-            InvalidTitle: If title is empty or exceeds length limit
-        """
+        """Update an existing task's title and/or description."""
         task = self.get_task(task_id)
         self._validate_title(title)
 
@@ -93,54 +96,29 @@ class TaskService:
         if description is not None:
             self._validate_description(description)
             task.description = description
+
+        self._save_tasks()
         return task
 
     def mark_complete(self, task_id: int) -> Task:
-        """Mark a task as completed.
-
-        Args:
-            task_id: Task ID to mark complete
-
-        Returns:
-            Updated task with completed=True
-
-        Raises:
-            TaskNotFound: If task_id does not exist
-        """
+        """Mark a task as completed."""
         task = self.get_task(task_id)
         task.completed = True
+        self._save_tasks()
         return task
 
     def mark_incomplete(self, task_id: int) -> Task:
-        """Mark a task as incomplete.
-
-        Args:
-            task_id: Task ID to mark incomplete
-
-        Returns:
-            Updated task with completed=False
-
-        Raises:
-            TaskNotFound: If task_id does not exist
-        """
+        """Mark a task as incomplete."""
         task = self.get_task(task_id)
         task.completed = False
+        self._save_tasks()
         return task
 
     def delete_task(self, task_id: int) -> None:
-        """Delete a task from the task list.
-
-        Args:
-            task_id: Task ID to delete
-
-        Raises:
-            TaskNotFound: If task_id does not exist
-
-        Note:
-            Deleting a task does not renumber remaining task IDs.
-        """
+        """Delete a task from the task list."""
         task = self.get_task(task_id)
         self._tasks.remove(task)
+        self._save_tasks()
 
     def _validate_title(self, title: str) -> None:
         """Validate task title.
