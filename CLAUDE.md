@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Python 3.13+ + None (in-memory storage, standard library only) (001-todo-console-app)
+- In-memory (Python data structures: lists, dicts) (001-todo-console-app)
+
+## Recent Changes
+- 001-todo-console-app: Added Python 3.13+ + None (in-memory storage, standard library only)
