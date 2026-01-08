@@ -20,6 +20,11 @@ dev = [
 [tool.uv]
 package = true
 
+[tool.uv.workspace]
+members = [
+    "mcp-server",
+]
+
 [tool.setuptools]
 packages = ["todo_app"]
 

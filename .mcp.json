@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "specifyplus": {
+      "command": "/home/ali/.local/bin/uv",
+      "args": ["run", "python", "-m", "src"],
+      "cwd": "/mnt/c/All Assignments of GenAI/Q4 ass/Hackathon/todo_app/mcp-server",
+      "env": {
+        "PATH": "/home/ali/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOME": "/home/ali",
+        "PYTHONUNBUFFERED": "1",
+        "MCP_LOG_FILE": "/mnt/c/All Assignments of GenAI/Q4 ass/Hackathon/todo_app/mcp-server/specifyplus-mcp.log"
+      }
+    }
+  }
+}

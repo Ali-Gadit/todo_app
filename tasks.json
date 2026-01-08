@@ -7,8 +7,8 @@
     },
     {
         "id": 2,
-        "title": "Buy groceries",
-        "description": "",
-        "completed": false
+        "title": "Complete project report",
+        "description": "Due by Friday 5pm",
+        "completed": true
     }
 ]

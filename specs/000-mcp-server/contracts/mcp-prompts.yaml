@@ -1,0 +1,202 @@
+# MCP Protocol Contracts: SpecifyPlus MCP Server
+
+# This file documents the MCP protocol operations supported by the SpecifyPlus MCP Server.
+# The server communicates via stdio transport using JSON-RPC messages.
+
+# Operation: prompts/list
+# Purpose: List all available SpecifyPlus command prompts
+# Transport: Stdin/Stdout JSON-RPC
+
+list_prompts:
+  method: "prompts/list"
+  request:
+    jsonrpc: "2.0"
+    id: 1
+    method: "prompts/list"
+    params: {}
+
+  response:
+    jsonrpc: "2.0"
+    id: 1
+    result:
+      prompts:
+        - name: "sp.specify"
+          description: "Create or update the feature specification from a natural language feature description"
+          arguments:
+            - name: "feature_description"
+              description: "Natural language description of the feature to specify"
+              required: false
+
+        - name: "sp.plan"
+          description: "Execute the implementation planning workflow using the plan template to generate design artifacts"
+          arguments:
+            - name: "planning_context"
+              description: "Additional context for planning (e.g., technology preferences)"
+              required: false
+
+        - name: "sp.tasks"
+          description: "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts"
+          arguments:
+            - name: "task_context"
+              description: "Additional context for task generation"
+              required: false
+
+        - name: "sp.implement"
+          description: "Execute the implementation plan by processing and executing all tasks defined in tasks.md"
+          arguments:
+            - name: "implementation_notes"
+              description: "Additional notes for implementation"
+              required: false
+
+        - name: "sp.clarify"
+          description: "Identify underspecified areas in the current feature spec by asking targeted clarification questions"
+          arguments:
+            - name: "clarification_focus"
+              description: "Specific area to focus clarification on"
+              required: false
+
+        - name: "sp.analyze"
+          description: "Perform a cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md"
+          arguments:
+            - name: "analysis_scope"
+              description: "Scope of analysis to perform"
+              required: false
+
+        - name: "sp.checklist"
+          description: "Generate a custom checklist for the current feature based on user requirements"
+          arguments:
+            - name: "checklist_domain"
+              description: "Domain or area for checklist generation"
+              required: false
+
+        - name: "sp.adr"
+          description: "Review planning artifacts for architecturally significant decisions and create ADRs"
+          arguments:
+            - name: "decision_title"
+              description: "Title of the architectural decision to document"
+              required: false
+
+        - name: "sp.phr"
+          description: "Record an AI exchange as a Prompt History Record (PHR) for learning and traceability"
+          arguments:
+            - name: "phr_details"
+              description: "Details for the PHR record"
+              required: false
+
+        - name: "sp.constitution"
+          description: "Create or update the project constitution from interactive or provided principle inputs"
+          arguments:
+            - name: "constitution_updates"
+              description: "Updates to apply to the constitution"
+              required: false
+
+        - name: "sp.git.commit_pr"
+          description: "An autonomous Git agent that intelligently executes git workflows to commit work and create PR"
+          arguments:
+            - name: "git_context"
+              description: "Context for git operations"
+              required: false
+
+        - name: "sp.reverse-engineer"
+          description: "Reverse engineer a codebase into SDD-RI artifacts (spec, plan, tasks, intelligence)"
+          arguments:
+            - name: "reverse_engineer_target"
+              description: "Target codebase or component to reverse engineer"
+              required: false
+
+        - name: "sp.taskstoissues"
+          description: "Convert existing tasks into actionable, dependency-ordered GitHub issues"
+          arguments:
+            - name: "task_conversion_context"
+              description: "Context for task-to-issue conversion"
+              required: false
+
+# Operation: prompts/get
+# Purpose: Invoke a specific prompt with arguments, returning the populated template
+# Transport: Stdin/Stdout JSON-RPC
+
+get_prompt:
+  method: "prompts/get"
+  request:
+    jsonrpc: "2.0"
+    id: 2
+    method: "prompts/get"
+    params:
+      name: "sp.specify"
+      arguments:
+        feature_description: "Add user authentication"
+
+  response:
+    jsonrpc: "2.0"
+    id: 2
+    result:
+      description: "Create or update the feature specification from a natural language feature description"
+      messages:
+        - role: "user"
+          content:
+            type: "text"
+            text: |
+              ## User Input
+
+              ```text
+              Add user authentication
+              ```
+
+              You **MUST** consider the user input before proceeding (if not empty).
+
+              ## Outline
+
+              The text the user typed after `/sp.specify` in the triggering message **is** the feature description...
+
+              [Full template content with $ARGUMENTS replaced by 'Add user authentication']
+
+# Error Responses
+
+error_command_not_found:
+  jsonrpc: "2.0"
+  id: 3
+  error:
+    code: -32602
+    message: "Command 'sp.unknown' not found"
+    data:
+      available_commands:
+        - "sp.specify"
+        - "sp.plan"
+        - "sp.tasks"
+        - "sp.implement"
+        - "sp.clarify"
+        - "sp.analyze"
+        - "sp.checklist"
+        - "sp.adr"
+        - "sp.phr"
+        - "sp.constitution"
+        - "sp.git.commit_pr"
+        - "sp.reverse-engineer"
+        - "sp.taskstoissues"
+
+error_invalid_yaml:
+  jsonrpc: "2.0"
+  id: 4
+  error:
+    code: -32603
+    message: "Invalid YAML frontmatter in command file"
+    data:
+      file_path: ".claude/commands/sp.specify.md"
+      yaml_error: "mapping values are not allowed in this context"
+
+error_template_processing:
+  jsonrpc: "2.0"
+  id: 5
+  error:
+    code: -32603
+    message: "Failed to process prompt template"
+    data:
+      command_name: "sp.specify"
+      error_details: "Argument interpolation failed"
+
+# Notes:
+# - All 13 SpecifyPlus commands exposed as prompts
+# - Arguments are optional (feature_description can be empty)
+# - Response includes full template with $ARGUMENTS replaced
+# - YAML frontmatter preserved in template content
+# - Error responses include helpful context (available commands, error details)
