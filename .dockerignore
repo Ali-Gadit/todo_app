@@ -1,0 +1,89 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+LICENSE
+CLAUDE.md
+AGENTS.md
+docs/
+*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+.dist-info/
+build/
+develop-eggs/
+dist/
+downloads/
+.sdist/
+.tox/
+.coverage
+.pytest_cache/
+htmlcov/
+.mypy_cache/
+.pyright_cache/
+.ruff_cache/
+
+# Node.js
+node_modules/
+dist/
+build/
+.next/
+out/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.production
+
+# Testing
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
+vitest.config.ts.timestamp-*
+*.tsbuildinfo
+
+# Cache
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+
+# Secrets
+*.pem
+*.key
+*.crt
+secrets/

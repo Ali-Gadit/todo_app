@@ -36,28 +36,30 @@ A command-line todo application that stores tasks in memory.
 git clone <repository-url>
 cd todo_app
 
-# Install dependencies with UV
+# Install dependencies with UV (installs 'todo' command)
 uv sync
 
-# Run the application
-python -m todo_app.cli.main
+# Run the application using the entry point alias
+uv run todo list
 
-# Or use the configured entry point
-todo
+# Or run using python module syntax
+python -m todo_app.cli.main list
 ```
 
 ## Usage
+
+Recommended usage is via `uv run todo <command>`.
 
 ### Adding Tasks
 
 Add a task with title and optional description:
 
 ```bash
-todo add "Buy groceries"
+uv run todo add "Buy groceries"
 ```
 
 ```bash
-todo add "Complete project report" "Due by Friday"
+uv run todo add "Complete project report" "Due by Friday"
 ```
 
 ### Viewing Tasks
@@ -65,7 +67,7 @@ todo add "Complete project report" "Due by Friday"
 List all tasks with status indicators:
 
 ```bash
-todo list
+uv run todo list
 ```
 
 **Output Example**:
@@ -96,11 +98,11 @@ Your Tasks:
 Update task title and/or description:
 
 ```bash
-todo update 1 "Buy groceries 🛒"
+uv run todo update 1 "Buy groceries 🛒"
 ```
 
 ```bash
-todo update 2 "Complete project report" "Due by Friday 5pm"
+uv run todo update 2 "Complete project report" "Due by Friday 5pm"
 ```
 
 ### Marking Tasks Complete/Incomplete
@@ -109,10 +111,10 @@ Toggle task completion status:
 
 ```bash
 # Mark as complete
-todo complete 2
+uv run todo complete 2
 
 # Mark as incomplete
-todo incomplete 2
+uv run todo incomplete 2
 ```
 
 ### Deleting Tasks
@@ -120,13 +122,13 @@ todo incomplete 2
 Remove a task from your list:
 
 ```bash
-todo delete 3
+uv run todo delete 3
 ```
 
 ## Command Reference
 
 ```
-Usage: todo <command> [arguments]
+Usage: uv run todo <command> [arguments]
 
 Commands:
   add <title> [description]    Add a new task
