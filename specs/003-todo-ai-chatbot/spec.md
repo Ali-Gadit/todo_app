@@ -181,6 +181,54 @@ As a user, I want the AI to proactively suggest helpful task actions based on my
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+## Technology Stack
+
+| Layer | Technology | Purpose | Source |
+|-------|------------|---------|--------|
+| **Frontend UI** | ChatKit (React) | AI chat interface with useChatKit hook | `.claude/skills/chatkit/*` |
+| **Frontend Framework** | Next.js 16+ (App Router) | React framework for web UI | `.claude/skills/nextjs-app-router` |
+| **Backend API** | FastAPI | Python web framework for chat endpoints | `.claude/skills/fastapi-sqlmodel` |
+| **Agent Orchestration** | OpenAI Agents SDK | Agent runner, handoffs, guardrails | `.claude/skills/openai-agents-creater` |
+| **Tool Server** | MCP Python SDK (FastMCP) | MCP server with tools for tasks | `.claude/skills/mcp-python-sdk` |
+| **Database** | PostgreSQL (Neon) | Serverless database for persistence | `.claude/skills/postgresql-neon` |
+| **ORM** | SQLModel | SQL + Pydantic ORM for database models | `.claude/skills/fastapi-sqlmodel` |
+| **Authentication** | Better Auth | JWT-based authentication | `.claude/skills/better-auth` |
+| **AI Models** | LiteLLM | Multi-provider LLM support (OpenAI, Gemini, Anthropic, Groq) | `.claude/skills/openai-agents-creater` |
+| **Streaming** | Server-Sent Events (SSE) | Real-time AI response streaming | `.claude/skills/fastapi-chatbot` |
+
+### MCP Tools (5 tools)
+
+| Tool | Parameters | Returns |
+|------|------------|---------|
+| `add_task` | title: str, description?: str, due_date?: str | Task object |
+| `list_tasks` | status?: "pending" \| "completed", limit?: int, offset?: int | List[Task] |
+| `complete_task` | task_id: str | Task object |
+| `delete_task` | task_id: str | Success boolean |
+| `update_task` | task_id: str, title?: str, description?: str, due_date?: str | Task object |
+
+### Architecture Flow
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Frontend Layer                             │
+│  ChatKit UI (React) ←→ Next.js 16+ App Router                │
+└──────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────────────────────────┐
+│                    Backend Layer                              │
+│  FastAPI ←→ Better Auth (JWT)                                │
+│       │                                                       │
+│       ├──→ OpenAI Agents SDK (Agent + Streaming Runner)      │
+│       │         │                                              │
+│       │         └──→ MCP Server (FastMCP)                     │
+│       │                   │                                   │
+│       │                   └──→ PostgreSQL (Neon)              │
+│       │                                                     │
+│       └──→ SQLModel ORM                                      │
+└──────────────────────────────────────────────────────────────┘
+```
+
 ## API Contracts
 
 ### POST /chat
