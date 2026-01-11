@@ -4,21 +4,21 @@ This directory contains specialized sub-agents that can be invoked using the Tas
 
 ## Available Agents
 
-### 1. `chatbot-agent`
+### 1. `chatbot-architect`
 **Purpose:** Creates complete AI chatbots - orchestrates all skills
 
 **What it does:**
 - Builds end-to-end chatbot solutions
 - Coordinates agent creation, UI, backend, database, and auth
-- Uses: `openai-agents-creater`, `chatkit-frontend`, `fastapi-chatbot`, `fastapi-sqlmodel`, `postgresql-neon`, `better-auth`, `mcp-python-sdk`
+- Uses: `openai-agents-creater.skill.md`, `chatkit-js-react.skill.md`, `chatkit-python-server.skill.md`, `fastapi-sqlmodel.skill.md`, `postgresql-neon.skill.md`, `better-auth.skill.md`, `mcp-python-sdk.skill.md`
 
 **Invoke with:**
 ```bash
 # Task tool (recommended)
-/task subagent_type:chatbot-agent
+task subagent_type:chatbot-architect
 ```
 
-### 2. `auth-agent`
+### 2. `auth-specialist`
 **Purpose:** Implements authentication systems
 
 **What it does:**
@@ -28,9 +28,9 @@ This directory contains specialized sub-agents that can be invoked using the Tas
 - Protected routes
 - Registration/login flows
 
-**Uses:** `better-auth`, `fastapi-sqlmodel`, `postgresql-neon`
+**Uses:** `better-auth.skill.md`, `fastapi-sqlmodel.skill.md`, `postgresql-neon.skill.md`
 
-### 3. `mcp-agent`
+### 3. `mcp-architect`
 **Purpose:** Creates MCP servers and connects them to agents
 
 **What it does:**
@@ -39,9 +39,9 @@ This directory contains specialized sub-agents that can be invoked using the Tas
 - Connects agents to MCP servers
 - Supports stdio and HTTP transports
 
-**Uses:** `mcp-python-sdk`, `openai-agents-creater`
+**Uses:** `mcp-python-sdk.skill.md`, `openai-agents-creater.skill.md`
 
-### 4. `database-agent`
+### 4. `database-architect`
 **Purpose:** Designs and implements PostgreSQL databases
 
 **What it does:**
@@ -50,7 +50,7 @@ This directory contains specialized sub-agents that can be invoked using the Tas
 - Configures Neon Serverless for production
 - Generates CRUD routes
 
-**Uses:** `fastapi-sqlmodel`, `postgresql-neon`
+**Uses:** `fastapi-sqlmodel.skill.md`, `postgresql-neon.skill.md`
 
 ## How to Use
 
@@ -60,25 +60,25 @@ from claude_code import Task
 
 # Create a chatbot
 task = Task(
-    subagent_type="chatbot-agent",
+    subagent_type="chatbot-architect",
     prompt="Create a customer support chatbot with auth and chat history"
 )
 
 # Create auth system
 auth_task = Task(
-    subagent_type="auth-agent",
+    subagent_type="auth-specialist",
     prompt="Add JWT authentication with refresh tokens"
 )
 
 # Create MCP server
 mcp_task = Task(
-    subagent_type="mcp-agent",
+    subagent_type="mcp-architect",
     prompt="Create an MCP server for database operations"
 )
 
 # Design database
 db_task = Task(
-    subagent_type="database-agent",
+    subagent_type="database-architect",
     prompt="Design a schema for chat conversations with messages"
 )
 ```
@@ -89,16 +89,16 @@ db_task = Task(
 User Request
      │
      ▼
-┌─────────────────┐
-│  chatbot-agent  │  ← Main orchestrator
-│  (uses skills)  │
-└────────┬────────┘
+┌──────────────────────┐
+│ chatbot-architect    │  ← Main orchestrator
+│ (orchestrates stack) │
+└────────┬─────────────┘
          │
-         ├──► auth-agent ──────► Database
-         │        │
-         ├──► mcp-agent ──────► MCP Server
+         ├──► auth-specialist ────────► Database
+         │          │
+         ├──► mcp-architect ────────► MCP Server
          │
-         └──► database-agent ─► PostgreSQL
+         └──► database-architect ──► PostgreSQL
 ```
 
 ## Skill References
@@ -107,23 +107,25 @@ Each agent has access to skills in `.claude/skills/`:
 
 | Skill | Used By | Purpose |
 |-------|---------|---------|
-| `openai-agents-creater` | chatbot, mcp | Agent creation |
-| `chatkit-frontend` | chatbot | UI components |
-| `fastapi-chatbot` | chatbot | Backend API |
-| `fastapi-sqlmodel` | chatbot, database | ORM patterns |
-| `postgresql-neon` | chatbot, auth, database | Database |
-| `better-auth` | chatbot, auth | Authentication |
-| `mcp-python-sdk` | chatbot, mcp | MCP servers |
+| `chatkit-js-react.skill.md` | chatbot-architect | React/JS frontend with ChatKit |
+| `chatkit-python-server.skill.md` | chatbot-architect | Python/FastAPI backend with ChatKit streaming |
+| `openai-agents-creater.skill.md` | chatbot-architect, agent-builder, mcp-architect | Agent creation and configuration |
+| `fastapi-sqlmodel.skill.md` | chatbot-architect, auth-specialist, database-architect | SQLModel ORM with FastAPI patterns |
+| `postgresql-neon.skill.md` | chatbot-architect, auth-specialist, database-architect | PostgreSQL and Neon Serverless |
+| `better-auth.skill.md` | chatbot-architect, auth-specialist | JWT authentication and user management |
+| `mcp-python-sdk.skill.md` | chatbot-architect, agent-builder, mcp-architect | MCP server creation and integration |
+| `skill-creater.skill.md` | All agents | Skill creation and packaging framework |
 
 ## Best Practices
 
-1. **Start with chatbot-agent** for complete solutions
-2. **Use specialists** for focused tasks:
-   - auth-agent for auth-only features
-   - mcp-agent for MCP tools
-   - database-agent for schema design
-3. **Agents can delegate** to each other for complex tasks
-4. **All code is production-ready** with proper patterns
+1. **Start with chatbot-architect** for complete AI chatbot solutions
+2. **Use specialists** for focused domain tasks:
+   - `auth-specialist` for authentication and user management
+   - `mcp-architect` for creating MCP tool servers
+   - `database-architect` for schema design and async database setup
+   - `agent-builder` for multi-agent systems with handoffs
+3. **Agents reference skills explicitly** - each agent frontmatter lists recommended skills
+4. **All generated code is production-ready** with proper error handling and patterns
 
 ## Creating New Agents
 
