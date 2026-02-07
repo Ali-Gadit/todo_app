@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@better-auth/client": "^0.0.2-alpha.3",
+    "@openai/chatkit-react": "^1.4.3",
+    "axios": "^1.7.9",
+    "better-auth": "^1.2.0",
+    "lucide-react": "^0.563.0",
     "next": "15.1.6",
     "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "better-auth": "^1.2.0",
-    "@better-auth/client": "^0.0.2-alpha.3",
-    "axios": "^1.7.9"
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
     "@types/node": "22.10.2",

@@ -2,7 +2,7 @@
 JWT authentication module for token generation and verification.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from fastapi import Depends, HTTPException, status
@@ -50,17 +50,18 @@ def create_access_token(
     Returns:
         Encoded JWT token string
     """
+    now = datetime.now(timezone.utc)
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = now + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(days=7)  # Default 7 days
+        expire = now + timedelta(days=7)  # Default 7 days
 
     to_encode = {
         "sub": str(user_id),
         "email": email,
         "username": username,
-        "exp": expire,
-        "iat": datetime.utcnow(),
+        "exp": int(expire.timestamp()),
+        "iat": int(now.timestamp()),
     }
 
     encoded_jwt = jwt.encode(

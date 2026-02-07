@@ -208,7 +208,25 @@ export const TaskList = forwardRef(function TaskList(props, ref) {
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h2 className="text-lg font-semibold text-neutral-900">Your Tasks</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-lg font-semibold text-neutral-900">Your Tasks</h2>
+          <button 
+            onClick={fetchTasks} 
+            className="p-1.5 text-neutral-500 hover:text-primary-600 hover:bg-primary-50 rounded-md transition-all flex items-center gap-1.5 text-sm font-medium"
+            title="Refresh tasks"
+            disabled={isLoading}
+          >
+            <svg 
+              className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Refresh
+          </button>
+        </div>
         <FilterTabs
           currentFilter={filter}
           onFilterChange={setFilter}
@@ -246,10 +264,11 @@ export const TaskList = forwardRef(function TaskList(props, ref) {
         </div>
       ) : (
         <div className="space-y-3 animate-slide-up">
-          {filteredTasks.map((task) => (
+          {filteredTasks.map((task, index) => (
             <TaskItem
               key={task.id}
               task={task}
+              index={index}
               onToggleComplete={handleToggleComplete}
               onDelete={handleDelete}
               onUpdate={handleUpdate}

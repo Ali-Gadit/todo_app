@@ -6,6 +6,7 @@ import { useToast } from "./Toast";
 
 interface TaskItemProps {
   task: Task;
+  index: number;
   onToggleComplete: (taskId: number, completed: boolean) => void;
   onDelete: (taskId: number) => void;
   onUpdate: (taskId: number, data: Partial<Task>) => void;
@@ -13,6 +14,7 @@ interface TaskItemProps {
 
 export function TaskItem({
   task,
+  index,
   onToggleComplete,
   onDelete,
   onUpdate,
@@ -154,6 +156,7 @@ export function TaskItem({
                   task.status === "completed" ? "line-through" : ""
                 }`}
               >
+                <span className="text-neutral-400 mr-2 font-mono text-sm">{index + 1}.</span>
                 {task.title}
               </h3>
               {task.description && (

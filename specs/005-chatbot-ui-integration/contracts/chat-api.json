@@ -1,0 +1,22 @@
+{
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/{user_id}/chat",
+      "description": "Process a user message and return an agent response",
+      "request": {
+        "body": {
+          "conversation_id": { "type": "integer", "required": false },
+          "message": { "type": "string", "required": true }
+        }
+      },
+      "response": {
+        "body": {
+          "conversation_id": { "type": "integer" },
+          "response": { "type": "string" },
+          "tool_calls": { "type": "array" }
+        }
+      }
+    }
+  ]
+}
