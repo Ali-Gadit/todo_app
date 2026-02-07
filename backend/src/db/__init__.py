@@ -4,24 +4,26 @@ Provides database connection and session management.
 """
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.pool import NullPool
 from sqlmodel import SQLModel
 
 from ..config import settings
 
 # Import models to register them with SQLModel metadata
-from ..models import User, Task
+from ..models import User, Task, Conversation, Message
 
-# Use SQLModel's metadata which automatically includes all SQLModel-based models
+# Use SQLModel's metadata
 Base = SQLModel
 
-
-# Create async engine
+# Create async engine with NullPool and zero caching
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,
-    pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    poolclass=NullPool,
+    connect_args={
+        "prepared_statement_cache_size": 0,
+        "statement_cache_size": 0,
+    },
 )
 
 # Create async session factory
@@ -33,12 +35,10 @@ async_session_factory = async_sessionmaker(
     autoflush=False,
 )
 
-
 async def init_db() -> None:
     """Initialize database tables."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
 
 async def get_session() -> AsyncSession:
     """

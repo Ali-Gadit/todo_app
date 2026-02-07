@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: Todo Backend API
+  version: 1.0.0
+paths:
+  /api/auth/signup:
+    post:
+      summary: Register a new user
+  /api/auth/login:
+    post:
+      summary: Authenticate a user
+  /api/tasks:
+    get:
+      summary: List tasks for the authenticated user
+    post:
+      summary: Create a new task
+  /api/tasks/{task_id}:
+    get:
+      summary: Get task details
+    put:
+      summary: Update a task
+    delete:
+      summary: Delete a task
+  /api/chat/{user_id}/chat:
+    post:
+      summary: Unified endpoint for ChatKit communication
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

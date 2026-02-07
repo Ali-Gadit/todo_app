@@ -1,0 +1,9 @@
+{
+  "name": "todo-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m uvicorn src.main:app --reload",
+    "start": "python3 -m uvicorn src.main:app"
+  }
+}
