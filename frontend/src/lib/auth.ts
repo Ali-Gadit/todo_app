@@ -7,6 +7,8 @@
 
 import { tokenManager, type User } from "./api";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 // Authentication helper functions
 export const auth = {
   // Check if user is signed in
@@ -25,7 +27,7 @@ export const auth = {
     username: string;
     password: string;
   }): Promise<{ user: User; token: string }> => {
-    const response = await fetch("http://localhost:8000/api/auth/register", {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -49,7 +51,7 @@ export const auth = {
     email: string;
     password: string;
   }): Promise<{ user: User; token: string }> => {
-    const response = await fetch("http://localhost:8000/api/auth/login", {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -70,7 +72,7 @@ export const auth = {
   // Sign out
   signOut: async (): Promise<void> => {
     try {
-      await fetch("http://localhost:8000/api/auth/logout", {
+      await fetch(`${API_URL}/api/auth/logout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -84,7 +86,7 @@ export const auth = {
   // Get session
   getSession: async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/auth/me", {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         headers: {
           Authorization: `Bearer ${tokenManager.getToken()}`,
         },

@@ -33,9 +33,9 @@ export default function ChatPanel() {
   const chatConfig = useMemo(() => ({
     api: {
       // Using the exact property names from your working example
-      url: `http://localhost:8000/api/chat/${user?.id}/chat`,
+      url: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/chat/${user?.id}/chat`,
       // Some versions require a domainKey starting with 'domain_pk_' to pass validation
-      domainKey: 'domain_pk_placeholder_for_local_dev',
+      domainKey: process.env.NEXT_PUBLIC_CHATKIT_DOMAIN_KEY || 'domain_pk_placeholder_for_local_dev',
     },
     initialThreadId: initialThread || undefined,
     theme: {
