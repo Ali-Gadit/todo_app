@@ -3,20 +3,21 @@ from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import os
 from .tools import add_task, list_tasks, complete_task, delete_task, update_task
+from ..config import settings
 
-# Critical: Load .env before accessing API keys
-load_dotenv()
+# Get API key from settings
+API_KEY = settings.GROQ_API_KEY
 
-# Get API key
-API_KEY = os.getenv("GROQ_API_KEY")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# For backward compatibility or if settings doesn't have it yet
 if not API_KEY:
-    # We raise an error if key is missing to ensure the agent doesn't fail silently later
-    raise ValueError("GROQ_API_KEY environment variable is required in .env file")
+    API_KEY = os.getenv("GROQ_API_KEY", "")
+
+# We don't raise error here anymore to allow the app to start
+# Validation happens when the client is used
 
 # Initialize OpenAI-compatible client for Groq
 external_client = AsyncOpenAI(
-    api_key=API_KEY,
+    api_key=API_KEY or "missing_key", # Use placeholder if empty to avoid pydantic error
     base_url="https://api.groq.com/openai/v1"
 )
 

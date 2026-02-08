@@ -44,6 +44,12 @@ class Settings(BaseSettings):
     PORT: int = Field(default=8000, description="Server port")
     DEBUG: bool = Field(default=False, description="Debug mode")
 
+    # AI Agents
+    GROQ_API_KEY: str = Field(
+        default="",
+        description="API Key for Groq Llama models",
+    )
+
 
 @lru_cache()
 def get_settings() -> Settings:
