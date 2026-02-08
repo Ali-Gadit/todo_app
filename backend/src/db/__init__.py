@@ -15,9 +15,14 @@ from ..models import User, Task, Conversation, Message
 # Use SQLModel's metadata
 Base = SQLModel
 
+# Ensure the DATABASE_URL uses the asyncpg driver
+database_url = settings.DATABASE_URL
+if database_url.startswith("postgresql://"):
+    database_url = database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 # Create async engine with NullPool and zero caching
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    database_url,
     echo=settings.DEBUG,
     poolclass=NullPool,
     connect_args={
