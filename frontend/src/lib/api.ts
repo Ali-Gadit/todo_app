@@ -116,6 +116,8 @@ export const api = {
 };
 
 // Type definitions
+export type FilterOption = "all" | "pending" | "in_progress" | "completed";
+
 export interface RegisterData {
   email: string;
   username: string;

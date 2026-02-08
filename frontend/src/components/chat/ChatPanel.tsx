@@ -41,7 +41,7 @@ export default function ChatPanel() {
     theme: {
       colorScheme: 'light' as const,
       color: {
-        accent: { primary: '#2563eb', level: 1 },
+        accent: { primary: '#2563eb', level: 1 as 0 | 1 | 2 | 3 },
       },
     },
     startScreen: {
@@ -56,7 +56,10 @@ export default function ChatPanel() {
     },
   }), [user?.id, initialThread]);
 
-  const { control, threadId } = useChatKit(chatConfig);
+  const { control } = useChatKit(chatConfig);
+  
+  // Get thread ID from the control object if available
+  const threadId = (control as any)?.threadId;
 
   // Save threadId whenever it changes
   useEffect(() => {

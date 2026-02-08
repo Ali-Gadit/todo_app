@@ -14,10 +14,10 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState<LoginData | RegisterData>({
+  const [formData, setFormData] = useState<RegisterData>({
     email: "",
     password: "",
-    ...(mode === "signup" ? { username: "" } : {}),
+    username: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

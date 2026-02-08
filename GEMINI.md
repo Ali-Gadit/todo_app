@@ -7,6 +7,8 @@ Auto-generated from all feature plans. Last updated: 2026-02-02
 - Neon Serverless PostgreSQL. (005-chatbot-ui-integration)
 - Python 3.13 + FastAPI, uvicorn, sqlmodel, asyncpg, psycopg2-binary, openai-agents, chatkit (001-containerize-backend)
 - Neon PostgreSQL (runtime config via DATABASE_URL) (001-containerize-backend)
+- TypeScript / Node.js 20 + Next.js 15.1.6, React 19, Tailwind CSS, Better Auth, ChatKit (006-containerize-frontend)
+- N/A (Stateless) (006-containerize-frontend)
 
 - Python 3.12+ (to match `openai-agents-python` requirements and project standards) (004-openai-agent-tools)
 
@@ -26,9 +28,9 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.12+ (to match `openai-agents-python` requirements and project standards): Follow standard conventions
 
 ## Recent Changes
+- 006-containerize-frontend: Added TypeScript / Node.js 20 + Next.js 15.1.6, React 19, Tailwind CSS, Better Auth, ChatKit
+- 006-containerize-frontend: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 001-containerize-backend: Added Python 3.13 + FastAPI, uvicorn, sqlmodel, asyncpg, psycopg2-binary, openai-agents, chatkit
-- 001-containerize-backend: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-- 005-chatbot-ui-integration: Added Python 3.12+, TypeScript (Next.js 16+)
 
 
 <!-- MANUAL ADDITIONS START -->
